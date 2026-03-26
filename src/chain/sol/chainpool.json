@@ -1,0 +1,1050 @@
+{
+  "version": "0.1.0",
+  "name": "chainpool",
+  "constants": [
+      {
+          "name": "CHAINPOOL_CONFIG_SEED",
+          "type": "bytes",
+          "value": "[99, 104, 97, 105, 110, 112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]"
+      },
+      {
+          "name": "ROUTERS_MAX_LEN",
+          "type": "u64",
+          "value": "5"
+      },
+      {
+          "name": "AUTH_SEED",
+          "type": "bytes",
+          "value": "[97, 117, 116, 104]"
+      },
+      {
+          "name": "ORDER_SEED",
+          "type": "bytes",
+          "value": "[111, 114, 100, 101, 114]"
+      },
+      {
+          "name": "CHAIN_ID",
+          "type": "u64",
+          "value": "1360108768460801"
+      },
+      {
+          "name": "NATIVE_MINT",
+          "type": "bytes",
+          "value": "[83, 111, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 50]"
+      }
+  ],
+  "instructions": [
+      {
+          "name": "initConfig",
+          "accounts": [
+              {
+                  "name": "payer",
+                  "isMut": true,
+                  "isSigner": true
+              },
+              {
+                  "name": "authority",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "config",
+                  "isMut": true,
+                  "isSigner": false
+              },
+              {
+                  "name": "systemProgram",
+                  "isMut": false,
+                  "isSigner": false
+              }
+          ],
+          "args": [
+              {
+                  "name": "params",
+                  "type": {
+                      "defined": "InitConfigParams"
+                  }
+              }
+          ]
+      },
+      {
+          "name": "updateConfig",
+          "accounts": [
+              {
+                  "name": "admin",
+                  "isMut": true,
+                  "isSigner": true
+              },
+              {
+                  "name": "config",
+                  "isMut": true,
+                  "isSigner": false
+              }
+          ],
+          "args": [
+              {
+                  "name": "params",
+                  "type": {
+                      "defined": "UpdateConfigParams"
+                  }
+              }
+          ]
+      },
+      {
+          "name": "transferAdmin",
+          "accounts": [
+              {
+                  "name": "admin",
+                  "isMut": false,
+                  "isSigner": true
+              },
+              {
+                  "name": "config",
+                  "isMut": true,
+                  "isSigner": false
+              }
+          ],
+          "args": [
+              {
+                  "name": "params",
+                  "type": {
+                      "defined": "TransferAdminParams"
+                  }
+              }
+          ]
+      },
+      {
+          "name": "crossIn",
+          "accounts": [
+              {
+                  "name": "router",
+                  "isMut": true,
+                  "isSigner": true
+              },
+              {
+                  "name": "user",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "config",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "record",
+                  "isMut": true,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenMint",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenAccount",
+                  "isMut": true,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenProgram",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "associatedTokenProgram",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "systemProgram",
+                  "isMut": false,
+                  "isSigner": false
+              }
+          ],
+          "args": [
+              {
+                  "name": "params",
+                  "type": {
+                      "defined": "OrderCrossInParams"
+                  }
+              }
+          ]
+      },
+      {
+          "name": "crossOut",
+          "accounts": [
+              {
+                  "name": "payer",
+                  "isMut": true,
+                  "isSigner": true
+              },
+              {
+                  "name": "authority",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "record",
+                  "isMut": true,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenMint",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenAccount",
+                  "isMut": true,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenProgram",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "associatedTokenProgram",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "systemProgram",
+                  "isMut": false,
+                  "isSigner": false
+              }
+          ],
+          "args": [
+              {
+                  "name": "params",
+                  "type": {
+                      "defined": "OrderCrossOutParams"
+                  }
+              }
+          ]
+      },
+      {
+          "name": "crossFinish",
+          "accounts": [
+              {
+                  "name": "payer",
+                  "isMut": true,
+                  "isSigner": true
+              },
+              {
+                  "name": "record",
+                  "isMut": true,
+                  "isSigner": false
+              },
+              {
+                  "name": "user",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenAccount",
+                  "isMut": false,
+                  "isSigner": false
+              }
+          ],
+          "args": [
+              {
+                  "name": "params",
+                  "type": {
+                      "defined": "OrderParams"
+                  }
+              }
+          ]
+      },
+      {
+          "name": "deposit",
+          "accounts": [
+              {
+                  "name": "owner",
+                  "isMut": true,
+                  "isSigner": true
+              },
+              {
+                  "name": "authority",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenMint",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenAccount",
+                  "isMut": true,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenVault",
+                  "isMut": true,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenProgram",
+                  "isMut": false,
+                  "isSigner": false,
+                  "docs": [
+                      "SPL program for output token transfers"
+                  ]
+              },
+              {
+                  "name": "associatedTokenProgram",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "systemProgram",
+                  "isMut": false,
+                  "isSigner": false
+              }
+          ],
+          "args": [
+              {
+                  "name": "params",
+                  "type": {
+                      "defined": "DepositParams"
+                  }
+              }
+          ]
+      },
+      {
+          "name": "withdraw",
+          "accounts": [
+              {
+                  "name": "router",
+                  "isMut": true,
+                  "isSigner": true
+              },
+              {
+                  "name": "authority",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "config",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenMint",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenAccount",
+                  "isMut": true,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenVault",
+                  "isMut": true,
+                  "isSigner": false
+              },
+              {
+                  "name": "tokenProgram",
+                  "isMut": false,
+                  "isSigner": false,
+                  "docs": [
+                      "SPL program for output token transfers"
+                  ]
+              },
+              {
+                  "name": "associatedTokenProgram",
+                  "isMut": false,
+                  "isSigner": false
+              },
+              {
+                  "name": "systemProgram",
+                  "isMut": false,
+                  "isSigner": false
+              }
+          ],
+          "args": [
+              {
+                  "name": "params",
+                  "type": {
+                      "defined": "WithdrawParams"
+                  }
+              }
+          ]
+      }
+  ],
+  "accounts": [
+      {
+          "name": "ChainPoolConfig",
+          "type": {
+              "kind": "struct",
+              "fields": [
+                  {
+                      "name": "admin",
+                      "type": "publicKey"
+                  },
+                  {
+                      "name": "routers",
+                      "type": {
+                          "vec": "publicKey"
+                      }
+                  },
+                  {
+                      "name": "bump",
+                      "type": "u8"
+                  },
+                  {
+                      "name": "authBump",
+                      "type": "u8"
+                  }
+              ]
+          }
+      },
+      {
+          "name": "OrderRecord",
+          "type": {
+              "kind": "struct",
+              "fields": [
+                  {
+                      "name": "orderId",
+                      "type": {
+                          "array": [
+                              "u8",
+                              32
+                          ]
+                      }
+                  },
+                  {
+                      "name": "payer",
+                      "type": "publicKey"
+                  },
+                  {
+                      "name": "user",
+                      "type": "publicKey"
+                  },
+                  {
+                      "name": "fromChainId",
+                      "type": "u64"
+                  },
+                  {
+                      "name": "toChainId",
+                      "type": "u64"
+                  },
+                  {
+                      "name": "fromToken",
+                      "type": {
+                          "array": [
+                              "u8",
+                              32
+                          ]
+                      }
+                  },
+                  {
+                      "name": "toToken",
+                      "type": {
+                          "array": [
+                              "u8",
+                              32
+                          ]
+                      }
+                  },
+                  {
+                      "name": "from",
+                      "type": {
+                          "array": [
+                              "u8",
+                              32
+                          ]
+                      }
+                  },
+                  {
+                      "name": "receiver",
+                      "type": {
+                          "array": [
+                              "u8",
+                              33
+                          ]
+                      }
+                  },
+                  {
+                      "name": "tokenAmount",
+                      "type": "u128"
+                  },
+                  {
+                      "name": "swapTokenOut",
+                      "type": "publicKey"
+                  },
+                  {
+                      "name": "swapTokenOutBeforeBalance",
+                      "type": "u64"
+                  },
+                  {
+                      "name": "swapTokenOutMinAmountOut",
+                      "type": "u64"
+                  },
+                  {
+                      "name": "minAmountOut",
+                      "type": "u128"
+                  },
+                  {
+                      "name": "refererId",
+                      "type": {
+                          "option": {
+                              "vec": "u16"
+                          }
+                      }
+                  },
+                  {
+                      "name": "feeRatio",
+                      "type": {
+                          "option": {
+                              "vec": "u16"
+                          }
+                      }
+                  },
+                  {
+                      "name": "bump",
+                      "type": "u8"
+                  }
+              ]
+          }
+      }
+  ],
+  "types": [
+      {
+          "name": "DepositParams",
+          "type": {
+              "kind": "struct",
+              "fields": [
+                  {
+                      "name": "transferTokenAmount",
+                      "type": "u64"
+                  }
+              ]
+          }
+      },
+      {
+          "name": "InitConfigParams",
+          "type": {
+              "kind": "struct",
+              "fields": [
+                  {
+                      "name": "admin",
+                      "type": "publicKey"
+                  },
+                  {
+                      "name": "routers",
+                      "type": {
+                          "vec": "publicKey"
+                      }
+                  }
+              ]
+          }
+      },
+      {
+          "name": "TransferAdminParams",
+          "type": {
+              "kind": "struct",
+              "fields": [
+                  {
+                      "name": "admin",
+                      "type": "publicKey"
+                  }
+              ]
+          }
+      },
+      {
+          "name": "UpdateConfigParams",
+          "type": {
+              "kind": "struct",
+              "fields": [
+                  {
+                      "name": "routers",
+                      "type": {
+                          "vec": "publicKey"
+                      }
+                  }
+              ]
+          }
+      },
+      {
+          "name": "WithdrawParams",
+          "type": {
+              "kind": "struct",
+              "fields": [
+                  {
+                      "name": "transferTokenAmount",
+                      "type": "u64"
+                  }
+              ]
+          }
+      },
+      {
+          "name": "OrderRecordEvent",
+          "type": {
+              "kind": "struct",
+              "fields": [
+                  {
+                      "name": "orderId",
+                      "type": {
+                          "array": [
+                              "u8",
+                              32
+                          ]
+                      }
+                  },
+                  {
+                      "name": "payer",
+                      "type": "publicKey"
+                  },
+                  {
+                      "name": "fromChainId",
+                      "type": "u64"
+                  },
+                  {
+                      "name": "toChainId",
+                      "type": "u64"
+                  },
+                  {
+                      "name": "fromToken",
+                      "type": {
+                          "array": [
+                              "u8",
+                              32
+                          ]
+                      }
+                  },
+                  {
+                      "name": "toToken",
+                      "type": {
+                          "array": [
+                              "u8",
+                              32
+                          ]
+                      }
+                  },
+                  {
+                      "name": "from",
+                      "type": {
+                          "array": [
+                              "u8",
+                              32
+                          ]
+                      }
+                  },
+                  {
+                      "name": "receiver",
+                      "type": {
+                          "array": [
+                              "u8",
+                              33
+                          ]
+                      }
+                  },
+                  {
+                      "name": "tokenAmount",
+                      "type": "u128"
+                  },
+                  {
+                      "name": "swapTokenOut",
+                      "type": "publicKey"
+                  },
+                  {
+                      "name": "swapTokenOutBeforeBalance",
+                      "type": "u64"
+                  },
+                  {
+                      "name": "swapTokenOutMinAmountOut",
+                      "type": "u64"
+                  },
+                  {
+                      "name": "minAmountOut",
+                      "type": "u128"
+                  },
+                  {
+                      "name": "refererId",
+                      "type": {
+                          "option": {
+                              "vec": "u16"
+                          }
+                      }
+                  },
+                  {
+                      "name": "feeRatio",
+                      "type": {
+                          "option": {
+                              "vec": "u16"
+                          }
+                      }
+                  },
+                  {
+                      "name": "bump",
+                      "type": "u8"
+                  }
+              ]
+          }
+      },
+      {
+          "name": "OrderCrossInParams",
+          "type": {
+              "kind": "struct",
+              "fields": [
+                  {
+                      "name": "orderId",
+                      "type": {
+                          "array": [
+                              "u8",
+                              32
+                          ]
+                      }
+                  },
+                  {
+                      "name": "minAmountOut",
+                      "type": "u64"
+                  }
+              ]
+          }
+      },
+      {
+          "name": "OrderCrossOutParams",
+          "type": {
+              "kind": "struct",
+              "fields": [
+                  {
+                      "name": "orderId",
+                      "type": {
+                          "array": [
+                              "u8",
+                              32
+                          ]
+                      }
+                  },
+                  {
+                      "name": "tokenAmount",
+                      "type": "u64"
+                  },
+                  {
+                      "name": "minAmountOut",
+                      "type": "u128"
+                  },
+                  {
+                      "name": "toChainId",
+                      "type": "u64"
+                  },
+                  {
+                      "name": "fromToken",
+                      "type": {
+                          "array": [
+                              "u8",
+                              32
+                          ]
+                      }
+                  },
+                  {
+                      "name": "toToken",
+                      "type": {
+                          "array": [
+                              "u8",
+                              20
+                          ]
+                      }
+                  },
+                  {
+                      "name": "receiver",
+                      "type": {
+                          "array": [
+                              "u8",
+                              33
+                          ]
+                      }
+                  },
+                  {
+                      "name": "swapTokenOutMinAmountOut",
+                      "type": "u64"
+                  },
+                  {
+                      "name": "refererId",
+                      "type": {
+                          "option": {
+                              "vec": "u16"
+                          }
+                      }
+                  },
+                  {
+                      "name": "feeRatio",
+                      "type": {
+                          "option": {
+                              "vec": "u16"
+                          }
+                      }
+                  }
+              ]
+          }
+      },
+      {
+          "name": "OrderParams",
+          "type": {
+              "kind": "struct",
+              "fields": [
+                  {
+                      "name": "orderId",
+                      "type": {
+                          "array": [
+                              "u8",
+                              32
+                          ]
+                      }
+                  }
+              ]
+          }
+      },
+      {
+          "name": "CrossType",
+          "type": {
+              "kind": "enum",
+              "variants": [
+                  {
+                      "name": "CrossIn"
+                  },
+                  {
+                      "name": "CrossOut"
+                  }
+              ]
+          }
+      }
+  ],
+  "events": [
+      {
+          "name": "CrossFinishEvent",
+          "fields": [
+              {
+                  "name": "crossType",
+                  "type": {
+                      "defined": "CrossType"
+                  },
+                  "index": false
+              },
+              {
+                  "name": "afterBalance",
+                  "type": "u64",
+                  "index": false
+              },
+              {
+                  "name": "amountOut",
+                  "type": "u64",
+                  "index": false
+              },
+              {
+                  "name": "orderRecord",
+                  "type": {
+                      "defined": "OrderRecordEvent"
+                  },
+                  "index": false
+              }
+          ]
+      },
+      {
+          "name": "CrossBeginEvent",
+          "fields": [
+              {
+                  "name": "crossType",
+                  "type": {
+                      "defined": "CrossType"
+                  },
+                  "index": false
+              },
+              {
+                  "name": "orderRecord",
+                  "type": {
+                      "defined": "OrderRecordEvent"
+                  },
+                  "index": false
+              }
+          ]
+      },
+      {
+          "name": "WithdrawEvent",
+          "fields": [
+              {
+                  "name": "authority",
+                  "type": "publicKey",
+                  "index": false
+              },
+              {
+                  "name": "tokenVault",
+                  "type": "publicKey",
+                  "index": false
+              },
+              {
+                  "name": "tokenAccount",
+                  "type": "publicKey",
+                  "index": false
+              },
+              {
+                  "name": "tokenMint",
+                  "type": "publicKey",
+                  "index": false
+              },
+              {
+                  "name": "tokenProgram",
+                  "type": "publicKey",
+                  "index": false
+              },
+              {
+                  "name": "tokenDecimal",
+                  "type": "u8",
+                  "index": false
+              },
+              {
+                  "name": "amount",
+                  "type": "u64",
+                  "index": false
+              }
+          ]
+      },
+      {
+          "name": "DepositEvent",
+          "fields": [
+              {
+                  "name": "owner",
+                  "type": "publicKey",
+                  "index": false
+              },
+              {
+                  "name": "authority",
+                  "type": "publicKey",
+                  "index": false
+              },
+              {
+                  "name": "tokenVault",
+                  "type": "publicKey",
+                  "index": false
+              },
+              {
+                  "name": "tokenAccount",
+                  "type": "publicKey",
+                  "index": false
+              },
+              {
+                  "name": "tokenMint",
+                  "type": "publicKey",
+                  "index": false
+              },
+              {
+                  "name": "tokenProgram",
+                  "type": "publicKey",
+                  "index": false
+              },
+              {
+                  "name": "tokenDecimal",
+                  "type": "u8",
+                  "index": false
+              },
+              {
+                  "name": "amount",
+                  "type": "u64",
+                  "index": false
+              }
+          ]
+      },
+      {
+          "name": "AdminChanged",
+          "fields": [
+              {
+                  "name": "newAdmin",
+                  "type": "publicKey",
+                  "index": false
+              },
+              {
+                  "name": "oldAdmin",
+                  "type": "publicKey",
+                  "index": false
+              }
+          ]
+      },
+      {
+          "name": "RouterChanged",
+          "fields": [
+              {
+                  "name": "newRouters",
+                  "type": {
+                      "vec": "publicKey"
+                  },
+                  "index": false
+              }
+          ]
+      }
+  ],
+  "errors": [
+      {
+          "code": 6000,
+          "name": "Unauthorized",
+          "msg": "Unauthorized"
+      },
+      {
+          "code": 6001,
+          "name": "InsufficientFunds",
+          "msg": "User insufficient funds"
+      },
+      {
+          "code": 6002,
+          "name": "InvalidAccount",
+          "msg": "Invalid account"
+      },
+      {
+          "code": 6003,
+          "name": "TooLittleOutputReceived",
+          "msg": "Too little output received"
+      },
+      {
+          "code": 6004,
+          "name": "TooManyRouters",
+          "msg": "Too many routers"
+      },
+      {
+          "code": 6005,
+          "name": "InvalidRouter",
+          "msg": "Invalid router"
+      },
+      {
+          "code": 6006,
+          "name": "ReceiveTooLittle",
+          "msg": "Receive too little"
+      },
+      {
+          "code": 6007,
+          "name": "InvalidTokenAccount",
+          "msg": "Invalid token account"
+      },
+      {
+          "code": 6008,
+          "name": "InvalidTokenMint",
+          "msg": "Invalid token mint"
+      },
+      {
+          "code": 6009,
+          "name": "InvalidChainId",
+          "msg": "Invalid chain id"
+      },
+      {
+          "code": 6010,
+          "name": "OrderAlreadyExists",
+          "msg": "Order already exists"
+      },
+      {
+          "code": 6011,
+          "name": "OrderAlreadyProcessed",
+          "msg": "Order already processed"
+      },
+      {
+          "code": 6012,
+          "name": "InvalidRefererInfo",
+          "msg": "Invalid referer info"
+      }
+  ],
+  "metadata": {
+      "address": "AxjZxsTdG5payyC5fwvnRXwD69xG35bdbRtTMLAefWbn"
+  }
+}

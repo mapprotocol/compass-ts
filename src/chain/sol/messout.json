@@ -1,0 +1,1430 @@
+{
+  "version": "0.1.0",
+  "name": "bridge",
+  "constants": [
+    {
+      "name": "BRIDGE_AUTH_SEED",
+      "type": "bytes",
+      "value": "[66, 114, 105, 100, 103, 101, 65, 117, 116, 104]"
+    },
+    {
+      "name": "CHAIN_MAX_LEN",
+      "type": "u8",
+      "value": "100"
+    },
+    {
+      "name": "MESSAGE_HASH_SEED",
+      "type": "bytes",
+      "value": "[77, 101, 115, 115, 97, 103, 101, 72, 97, 115, 104]"
+    },
+    {
+      "name": "MESSAGE_MAX_LEN",
+      "type": "u16",
+      "value": "1024"
+    },
+    {
+      "name": "MESSAGE_SEED",
+      "type": "bytes",
+      "value": "[77, 101, 115, 115, 97, 103, 101]"
+    },
+    {
+      "name": "MOS_AUTH_SEED",
+      "type": "bytes",
+      "value": "[77, 111, 115, 65, 117, 116, 104]"
+    },
+    {
+      "name": "MOS_CONFIG_SEED",
+      "type": "bytes",
+      "value": "[77, 111, 115, 67, 111, 110, 102, 105, 103]"
+    },
+    {
+      "name": "MOS_SIGNER_MAX_LEN",
+      "type": "u8",
+      "value": "10"
+    },
+    {
+      "name": "PAYLOAD_MAX_LEN",
+      "type": "u16",
+      "value": "256"
+    },
+    {
+      "name": "RELAYERS_MAX_LEN",
+      "type": "u8",
+      "value": "5"
+    },
+    {
+      "name": "SOLANA_CHAIN_ID",
+      "type": "u64",
+      "value": "1360108768460801"
+    },
+    {
+      "name": "TOKEN_MAX_LEN",
+      "type": "u8",
+      "value": "100"
+    },
+    {
+      "name": "TR_SEED",
+      "type": "bytes",
+      "value": "[84, 111, 107, 101, 110, 82, 101, 103, 105, 115, 116, 101, 114]"
+    }
+  ],
+  "instructions": [
+    {
+      "name": "initMosConfig",
+      "docs": [
+        "--------------------------- Admin Instructions ---------------------------"
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mosConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "InitMosConfigParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setMosConfig",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mosConfig",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "SetMosConfigParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "transferAdmin",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "mosConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TransferAdminParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "withdrawRent",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "mosConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "msg",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "receiver",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "eventAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "program",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "WithdrawRentParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "initTokenMintableRegister",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mosConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "trConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "InitTokenMintableRegisterParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "initTokenTransferRegister",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mosConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "trConfig",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenEscrow",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "InitTokenTransferableRegisterParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "withdraw",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "trConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenEscrow",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "toAddress",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenDest",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "SPL program for output token transfers"
+          ]
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "WithdrawParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "mintTo",
+      "accounts": [
+        {
+          "name": "minter",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "oftConfig",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "only the non-adapter oft can mint token to the destination account"
+          ]
+        },
+        {
+          "name": "tokenDest",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "MintToParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "messageIn",
+      "accounts": [
+        {
+          "name": "relayer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mosConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "msg",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "MessageInParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "messageOut",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mosConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "msg",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "MessageOutParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tokenReceive",
+      "accounts": [
+        {
+          "name": "relayer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mosConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "msg",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "trConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenEscrow",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "tokenDest",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "TokenReceiveParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tokenSend",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "trConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mosConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenSource",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenEscrow",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "SendParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "messageGet",
+      "accounts": [
+        {
+          "name": "msg",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "MessagePayloadGetParams"
+          }
+        }
+      ],
+      "returns": {
+        "defined": "Payload"
+      }
+    }
+  ],
+  "accounts": [
+    {
+      "name": "TRConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tokenMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "tokenProgram",
+            "type": "publicKey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
+          },
+          {
+            "name": "ext",
+            "type": {
+              "defined": "TRConfigExt"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "MessageReceive",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "orderId",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "message",
+            "type": "bytes"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MessageSend",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "orderId",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MosConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "publicKey"
+          },
+          {
+            "name": "router",
+            "type": "publicKey"
+          },
+          {
+            "name": "relayers",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "mosSigners",
+            "type": {
+              "vec": {
+                "array": [
+                  "u8",
+                  64
+                ]
+              }
+            }
+          },
+          {
+            "name": "threshold",
+            "type": "u8"
+          },
+          {
+            "name": "supportChainIds",
+            "type": {
+              "vec": "u64"
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "mapoMos",
+            "type": "bytes"
+          },
+          {
+            "name": "gasLimit",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "SetMosConfigParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "relayers",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "supportChainIds",
+            "type": {
+              "vec": "u64"
+            }
+          },
+          {
+            "name": "mosSigners",
+            "type": {
+              "vec": {
+                "array": [
+                  "u8",
+                  64
+                ]
+              }
+            }
+          },
+          {
+            "name": "mapoMos",
+            "type": "bytes"
+          },
+          {
+            "name": "gasLimit",
+            "type": "u64"
+          },
+          {
+            "name": "threshold",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InitMosConfigParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "publicKey"
+          },
+          {
+            "name": "router",
+            "type": "publicKey"
+          },
+          {
+            "name": "relayers",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "supportChainIds",
+            "type": {
+              "vec": "u64"
+            }
+          },
+          {
+            "name": "mosSigners",
+            "type": {
+              "vec": {
+                "array": [
+                  "u8",
+                  64
+                ]
+              }
+            }
+          },
+          {
+            "name": "mapoMos",
+            "type": "bytes"
+          },
+          {
+            "name": "gasLimit",
+            "type": "u64"
+          },
+          {
+            "name": "threshold",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InitTokenMintableRegisterParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mintAuthority",
+            "type": {
+              "option": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "InitTokenTransferableRegisterParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": {
+              "option": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "TransferAdminParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "receiver",
+            "type": "publicKey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawRentParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "orderId",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MessageInParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "evmLog",
+            "type": "bytes"
+          },
+          {
+            "name": "oraclePacked",
+            "type": "bytes"
+          },
+          {
+            "name": "signatures",
+            "type": {
+              "vec": {
+                "array": [
+                  "u8",
+                  65
+                ]
+              }
+            }
+          },
+          {
+            "name": "value",
+            "type": "u64"
+          },
+          {
+            "name": "dataLen",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MessageOutParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "reserved",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          },
+          {
+            "name": "gasLimit",
+            "type": "u64"
+          },
+          {
+            "name": "order",
+            "type": {
+              "defined": "RouteOrder"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "MessagePayloadGetParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "orderId",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "MintToParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TokenReceiveParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "evmLog",
+            "type": "bytes"
+          },
+          {
+            "name": "oraclePacked",
+            "type": "bytes"
+          },
+          {
+            "name": "signatures",
+            "type": {
+              "vec": {
+                "array": [
+                  "u8",
+                  65
+                ]
+              }
+            }
+          },
+          {
+            "name": "dataLen",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SendParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "order",
+            "type": {
+              "defined": "RouteOrder"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "TRConfigExt",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Mintable",
+            "fields": [
+              {
+                "option": "publicKey"
+              }
+            ]
+          },
+          {
+            "name": "Transferable",
+            "fields": [
+              "publicKey"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Payload",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "crossTokenLen",
+            "type": "u8"
+          },
+          {
+            "name": "crossAddressLen",
+            "type": "u8"
+          },
+          {
+            "name": "toToken",
+            "type": "publicKey"
+          },
+          {
+            "name": "toAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "minAmountOut",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RouteOrder",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "orderId",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "payer",
+            "type": "publicKey"
+          },
+          {
+            "name": "user",
+            "type": "publicKey"
+          },
+          {
+            "name": "fromChainId",
+            "type": "u64"
+          },
+          {
+            "name": "toChainId",
+            "type": "u64"
+          },
+          {
+            "name": "fromToken",
+            "type": "publicKey"
+          },
+          {
+            "name": "tokenAmount",
+            "type": "u128"
+          },
+          {
+            "name": "amountOut",
+            "type": "u64"
+          },
+          {
+            "name": "relay",
+            "type": "u8"
+          },
+          {
+            "name": "messageType",
+            "type": "u8"
+          },
+          {
+            "name": "initiator",
+            "type": "publicKey"
+          },
+          {
+            "name": "toAddress",
+            "type": "bytes"
+          },
+          {
+            "name": "swapData",
+            "type": "bytes"
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "AdminTransferredEvent",
+      "fields": [
+        {
+          "name": "newAdmin",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "MessageInEvent",
+      "fields": [
+        {
+          "name": "orderId",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "fromChain",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "token",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "to",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "from",
+          "type": "bytes",
+          "index": false
+        },
+        {
+          "name": "payload",
+          "type": "bytes",
+          "index": false
+        },
+        {
+          "name": "result",
+          "type": "bool",
+          "index": false
+        },
+        {
+          "name": "reason",
+          "type": "bytes",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "MessageOutEvent",
+      "fields": [
+        {
+          "name": "relay",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "messageType",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "mos",
+          "type": "bytes",
+          "index": false
+        },
+        {
+          "name": "fromChain",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "toChain",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "orderId",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "token",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "initiator",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "from",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "to",
+          "type": "bytes",
+          "index": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "gasLimit",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "swapData",
+          "type": "bytes",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "RentWithdrawnEvent",
+      "fields": [
+        {
+          "name": "receiver",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "TokenSendEvent",
+      "fields": [
+        {
+          "name": "routerOrder",
+          "type": {
+            "defined": "RouteOrder"
+          },
+          "index": false
+        },
+        {
+          "name": "ext",
+          "type": {
+            "defined": "TRConfigExt"
+          },
+          "index": false
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidAdmin"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidMos"
+    },
+    {
+      "code": 6002,
+      "name": "InvaildMessage"
+    },
+    {
+      "code": 6003,
+      "name": "InvalidAmount"
+    },
+    {
+      "code": 6004,
+      "name": "Unauthorized"
+    },
+    {
+      "code": 6005,
+      "name": "InvalidTokenEscrow"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidTokenDest"
+    },
+    {
+      "code": 6007,
+      "name": "InvalidTokenMint"
+    },
+    {
+      "code": 6008,
+      "name": "InvalidSender"
+    },
+    {
+      "code": 6009,
+      "name": "TooManyRelayers"
+    },
+    {
+      "code": 6010,
+      "name": "TooManyMosSigners"
+    },
+    {
+      "code": 6011,
+      "name": "InvalidRelayer"
+    },
+    {
+      "code": 6012,
+      "name": "InvalidThreshold"
+    },
+    {
+      "code": 6013,
+      "name": "NotFound"
+    },
+    {
+      "code": 6014,
+      "name": "InvalidSignatures"
+    },
+    {
+      "code": 6015,
+      "name": "InvalidAmountOut"
+    },
+    {
+      "code": 6016,
+      "name": "InsufficientBalance"
+    },
+    {
+      "code": 6017,
+      "name": "InvalidChainId"
+    },
+    {
+      "code": 6018,
+      "name": "InvalidFromChainId"
+    },
+    {
+      "code": 6019,
+      "name": "InvalidToChainId"
+    },
+    {
+      "code": 6020,
+      "name": "UnsupportedChainId"
+    },
+    {
+      "code": 6021,
+      "name": "InvalidMsgLength"
+    },
+    {
+      "code": 6022,
+      "name": "InvalidReceiptRoot"
+    },
+    {
+      "code": 6023,
+      "name": "InvalidMessageHash"
+    }
+  ],
+  "metadata": {
+    "address": "9morDALTT4UKNtJtvv6bmQ4sp5Z19Ux7qPQUokzBozkR"
+  }
+}
