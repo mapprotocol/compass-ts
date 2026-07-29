@@ -103,6 +103,11 @@ export class SolChain {
   }
 
   async handleTransaction(connection: web3.Connection, txHash: string, mcsAddress: string, trx: VersionedTransactionResponse | null): Promise<void> {
+    if (trx?.meta?.err) {
+      console.log("Skip failed solana tx", txHash, "err", JSON.stringify(trx.meta.err))
+      return
+    }
+
     const events = this.parser.parseTransaction(trx)
 
     for (let event of events.chainPoolEvents) {
