@@ -18,7 +18,8 @@ async function main() {
   program.parse(process.argv)
   const options = program.opts();
   let configPath = options.config
-  if (configPath == "") {
+  console.log("configPath ", configPath)
+  if (configPath == "" || configPath === undefined) {
     configPath = defCfgPath
   }
   console.log("Input config path is:", configPath)

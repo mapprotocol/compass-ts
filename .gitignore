@@ -1,4 +1,10 @@
-./node_modeules
-./app
-./out
-./.vscode
+node_modules/
+app/
+out
+.vscode
+.DS_Store
+*.log
+tmp.txt
+.env
+.idea/
+config.json

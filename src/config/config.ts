@@ -15,10 +15,12 @@ export interface Chain {
 }
 
 export interface ChainOpt {
-    startBlock: string;
-    mcs: string;
+    startBlock: string | Record<string, string>;
+    mcs: string | string[];
     blockConfirmations: string;
     butterEntrance: string;
+    supportedBridgeMints?: string[];
+    nativeTokenOutAddress?: string;
 }
 
 
@@ -36,15 +38,13 @@ interface Other {
     monitorUrl: string;
     env:string;
     butter:string;
+    butterApiKey?: string;
 }
 
 export function parseConfig(path:string): Config {
     if (!fs.existsSync(path)) {
-
+        throw new Error(`Config file not found: ${path}`);
     }
 
-    let err:Error;
-    //读取文件内容，并转化为Json对象
-    let ret:Config = JSON.parse(fs.readFileSync(path, "utf8"));
-    return ret;
+    return JSON.parse(fs.readFileSync(path, "utf8")) as Config;
 }

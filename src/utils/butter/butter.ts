@@ -30,26 +30,51 @@ interface BridgeDataRequest {
 
 const SuccessCode = 0; // Assuming this is defined elsewhere
 const PathBridgeData = '/messageInBridgeData';
-const entrance = ''; // Set default entrance
-
-export async function requestBridgeData(domain:string, txHash:string, request: BridgeDataRequest): Promise<Bridge> {
-    let affiliate = "";
-    if (request.affiliate && request.affiliate.length > 0) {
-        affiliate = request.affiliate
-            .map((a, i) => `${i === 0 ? 'affiliate=' : '&affiliate='}${encodeURIComponent(a)}`)
-            .join('');
+export async function requestBridgeData(domain: string, txHash: string, apiKey: string, request: BridgeDataRequest): Promise<Bridge> {
+    if (!apiKey) {
+        throw new ExternalRequestError(
+            `${domain}${PathBridgeData}`,
+            'Butter backend API key is required. Set BACKEND_API_KEY or BUTTER_API_KEY, or configure other.butterApiKey.',
+            'MISSING_API_KEY'
+        );
     }
 
-    const params = `fromChainId=${request.fromChainID}&caller=${request.caller}&toChainId=${request.toChainID}&amount=${request.amount}` +
-        `&tokenInAddress=${request.tokenInAddress}&tokenOutAddress=${request.tokenOutAddress}` +
-        `&minAmountOut=${request.minAmountOut}&receiver=${request.receiver}` +
-        `&entranceId=${request.entranceId}&${affiliate}`;
+    const params = new URLSearchParams({
+        fromChainId: request.fromChainID,
+        caller: request.caller,
+        toChainId: request.toChainID,
+        amount: request.amount,
+        tokenInAddress: request.tokenInAddress,
+        tokenOutAddress: request.tokenOutAddress,
+        minAmountOut: request.minAmountOut,
+        receiver: request.receiver,
+        entranceId: request.entranceId,
+    });
+    if (request.entrance) {
+        params.append('entrance', request.entrance);
+    }
+    (request.affiliate || []).forEach((affiliate) => {
+        params.append('affiliate', affiliate);
+    });
 
-    const url = `${domain}${PathBridgeData}?${params}`;
+    const url = `${domain}${PathBridgeData}?${params.toString()}`;
     console.log(`request butter bridge data url: ${url}`);
 
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: {
+                Authorization: `Bearer ${apiKey}`,
+            },
+        });
+
+        if (response.status !== 200) {
+            throw new ExternalRequestError(
+                url,
+                await getHttpErrorMessage(response),
+                response.status.toString()
+            );
+        }
+
         const ret = await response.json() as BridgeDataResponse;
 
         if (!isUndefined(ret.statusCode) && ret.statusCode !== SuccessCode) {
@@ -94,7 +119,21 @@ export async function requestBridgeData(domain:string, txHash:string, request: B
 }
 
 function isUndefined(value: any): value is undefined {
-  return value === undefined;
+    return value === undefined;
+}
+
+async function getHttpErrorMessage(response: Response): Promise<string> {
+    const text = await response.text();
+    if (!text) {
+        return response.statusText || 'Butter request failed';
+    }
+
+    try {
+        const body = JSON.parse(text);
+        return body.message || body.msg || body.error || text;
+    } catch (_) {
+        return text;
+    }
 }
 
 class ExternalRequestError extends Error {

@@ -1,1050 +1,2101 @@
 {
-  "version": "0.1.0",
-  "name": "chainpool",
-  "constants": [
-      {
-          "name": "CHAINPOOL_CONFIG_SEED",
-          "type": "bytes",
-          "value": "[99, 104, 97, 105, 110, 112, 111, 111, 108, 95, 99, 111, 110, 102, 105, 103]"
-      },
-      {
-          "name": "ROUTERS_MAX_LEN",
-          "type": "u64",
-          "value": "5"
-      },
-      {
-          "name": "AUTH_SEED",
-          "type": "bytes",
-          "value": "[97, 117, 116, 104]"
-      },
-      {
-          "name": "ORDER_SEED",
-          "type": "bytes",
-          "value": "[111, 114, 100, 101, 114]"
-      },
-      {
-          "name": "CHAIN_ID",
-          "type": "u64",
-          "value": "1360108768460801"
-      },
-      {
-          "name": "NATIVE_MINT",
-          "type": "bytes",
-          "value": "[83, 111, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 50]"
-      }
-  ],
+  "address": "mosv35NjuYkM8iMdihM96cG2ZziU2RJYZfSaGuV8uF6",
+  "metadata": {
+    "name": "chainpool",
+    "version": "0.1.0",
+    "spec": "0.1.0"
+  },
   "instructions": [
-      {
-          "name": "initConfig",
-          "accounts": [
+    {
+      "name": "cross_in",
+      "discriminator": [
+        32,
+        145,
+        241,
+        118,
+        88,
+        94,
+        101,
+        167
+      ],
+      "accounts": [
+        {
+          "name": "relayer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
               {
-                  "name": "payer",
-                  "isMut": true,
-                  "isSigner": true
-              },
-              {
-                  "name": "authority",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "config",
-                  "isMut": true,
-                  "isSigner": false
-              },
-              {
-                  "name": "systemProgram",
-                  "isMut": false,
-                  "isSigner": false
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
               }
+            ]
+          }
+        },
+        {
+          "name": "marker",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  108,
+                  101,
+                  97,
+                  115,
+                  101
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "proof.order_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  97,
+                  117,
+                  116,
+                  104
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "bridge_mint"
+        },
+        {
+          "name": "vault_ata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "vault_authority"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "bridge_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "receiver_authority",
+          "docs": [
+            "is_signer=true AccountMeta — this is what lets the receiver's `invoke_signed` (seeds",
+            "= [RECEIVER_AUTH_SEED, order_id, bump]) actually propagate the signature here. The",
+            "address is verified against config.receiver_program in `require_receiver_authority`."
           ],
-          "args": [
-              {
-                  "name": "params",
-                  "type": {
-                      "defined": "InitConfigParams"
-                  }
-              }
-          ]
-      },
-      {
-          "name": "updateConfig",
-          "accounts": [
-              {
-                  "name": "admin",
-                  "isMut": true,
-                  "isSigner": true
-              },
-              {
-                  "name": "config",
-                  "isMut": true,
-                  "isSigner": false
-              }
-          ],
-          "args": [
-              {
-                  "name": "params",
-                  "type": {
-                      "defined": "UpdateConfigParams"
-                  }
-              }
-          ]
-      },
-      {
-          "name": "transferAdmin",
-          "accounts": [
-              {
-                  "name": "admin",
-                  "isMut": false,
-                  "isSigner": true
-              },
-              {
-                  "name": "config",
-                  "isMut": true,
-                  "isSigner": false
-              }
-          ],
-          "args": [
-              {
-                  "name": "params",
-                  "type": {
-                      "defined": "TransferAdminParams"
-                  }
-              }
-          ]
-      },
-      {
-          "name": "crossIn",
-          "accounts": [
-              {
-                  "name": "router",
-                  "isMut": true,
-                  "isSigner": true
-              },
-              {
-                  "name": "user",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "config",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "record",
-                  "isMut": true,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenMint",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenAccount",
-                  "isMut": true,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenProgram",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "associatedTokenProgram",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "systemProgram",
-                  "isMut": false,
-                  "isSigner": false
-              }
-          ],
-          "args": [
-              {
-                  "name": "params",
-                  "type": {
-                      "defined": "OrderCrossInParams"
-                  }
-              }
-          ]
-      },
-      {
-          "name": "crossOut",
-          "accounts": [
-              {
-                  "name": "payer",
-                  "isMut": true,
-                  "isSigner": true
-              },
-              {
-                  "name": "authority",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "record",
-                  "isMut": true,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenMint",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenAccount",
-                  "isMut": true,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenProgram",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "associatedTokenProgram",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "systemProgram",
-                  "isMut": false,
-                  "isSigner": false
-              }
-          ],
-          "args": [
-              {
-                  "name": "params",
-                  "type": {
-                      "defined": "OrderCrossOutParams"
-                  }
-              }
-          ]
-      },
-      {
-          "name": "crossFinish",
-          "accounts": [
-              {
-                  "name": "payer",
-                  "isMut": true,
-                  "isSigner": true
-              },
-              {
-                  "name": "record",
-                  "isMut": true,
-                  "isSigner": false
-              },
-              {
-                  "name": "user",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenAccount",
-                  "isMut": false,
-                  "isSigner": false
-              }
-          ],
-          "args": [
-              {
-                  "name": "params",
-                  "type": {
-                      "defined": "OrderParams"
-                  }
-              }
-          ]
-      },
-      {
-          "name": "deposit",
-          "accounts": [
-              {
-                  "name": "owner",
-                  "isMut": true,
-                  "isSigner": true
-              },
-              {
-                  "name": "authority",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenMint",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenAccount",
-                  "isMut": true,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenVault",
-                  "isMut": true,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenProgram",
-                  "isMut": false,
-                  "isSigner": false,
-                  "docs": [
-                      "SPL program for output token transfers"
-                  ]
-              },
-              {
-                  "name": "associatedTokenProgram",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "systemProgram",
-                  "isMut": false,
-                  "isSigner": false
-              }
-          ],
-          "args": [
-              {
-                  "name": "params",
-                  "type": {
-                      "defined": "DepositParams"
-                  }
-              }
-          ]
-      },
-      {
-          "name": "withdraw",
-          "accounts": [
-              {
-                  "name": "router",
-                  "isMut": true,
-                  "isSigner": true
-              },
-              {
-                  "name": "authority",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "config",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenMint",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenAccount",
-                  "isMut": true,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenVault",
-                  "isMut": true,
-                  "isSigner": false
-              },
-              {
-                  "name": "tokenProgram",
-                  "isMut": false,
-                  "isSigner": false,
-                  "docs": [
-                      "SPL program for output token transfers"
-                  ]
-              },
-              {
-                  "name": "associatedTokenProgram",
-                  "isMut": false,
-                  "isSigner": false
-              },
-              {
-                  "name": "systemProgram",
-                  "isMut": false,
-                  "isSigner": false
-              }
-          ],
-          "args": [
-              {
-                  "name": "params",
-                  "type": {
-                      "defined": "WithdrawParams"
-                  }
-              }
-          ]
+          "signer": true
+        },
+        {
+          "name": "base_escrow",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "proof",
+          "type": {
+            "defined": {
+              "name": "CompactRelayProof"
+            }
+          }
+        }
+      ],
+      "returns": {
+        "defined": {
+          "name": "ReleaseInfo"
+        }
       }
+    },
+    {
+      "name": "cross_out",
+      "discriminator": [
+        232,
+        107,
+        54,
+        100,
+        143,
+        94,
+        85,
+        46
+      ],
+      "accounts": [
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "marker",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111,
+                  114,
+                  100,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "args.order_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  97,
+                  117,
+                  116,
+                  104
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "bridge_mint"
+        },
+        {
+          "name": "from",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "vault_authority"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "bridge_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "CrossOutArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "emergency_withdraw",
+      "discriminator": [
+        239,
+        45,
+        203,
+        64,
+        150,
+        73,
+        218,
+        92
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  97,
+                  117,
+                  116,
+                  104
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "source",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "vault_authority"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "emergency_treasury",
+          "docs": [
+            "single-mint token account. The destination below is bound to its canonical ATA for",
+            "the withdrawn mint, so every supported mint's vault can be evacuated (the old",
+            "`destination == emergency_treasury` check could only ever match one mint)."
+          ]
+        },
+        {
+          "name": "destination",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "emergency_treasury"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "initialize",
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  97,
+                  117,
+                  116,
+                  104
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "args",
+          "type": {
+            "defined": {
+              "name": "InitializeArgs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "pause",
+      "discriminator": [
+        211,
+        22,
+        221,
+        251,
+        74,
+        121,
+        193,
+        47
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "rotate_epoch",
+      "discriminator": [
+        94,
+        13,
+        133,
+        182,
+        76,
+        189,
+        84,
+        248
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "validators",
+          "type": {
+            "vec": {
+              "array": [
+                "u8",
+                20
+              ]
+            }
+          }
+        },
+        {
+          "name": "threshold",
+          "type": "u8"
+        },
+        {
+          "name": "version",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_operators",
+      "discriminator": [
+        78,
+        166,
+        85,
+        72,
+        92,
+        55,
+        73,
+        216
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "operators",
+          "type": {
+            "vec": "pubkey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "set_receiver_program",
+      "discriminator": [
+        54,
+        61,
+        14,
+        12,
+        114,
+        190,
+        16,
+        214
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "receiver_program",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "set_supported_tokens",
+      "discriminator": [
+        29,
+        194,
+        224,
+        145,
+        222,
+        243,
+        63,
+        247
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": [
+        {
+          "name": "supported_tokens",
+          "type": {
+            "vec": "pubkey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "unpause",
+      "discriminator": [
+        169,
+        144,
+        4,
+        38,
+        10,
+        141,
+        188,
+        255
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  105,
+                  110,
+                  112,
+                  111,
+                  111,
+                  108,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "event_authority"
+        },
+        {
+          "name": "program"
+        }
+      ],
+      "args": []
+    }
   ],
   "accounts": [
-      {
-          "name": "ChainPoolConfig",
-          "type": {
-              "kind": "struct",
-              "fields": [
-                  {
-                      "name": "admin",
-                      "type": "publicKey"
-                  },
-                  {
-                      "name": "routers",
-                      "type": {
-                          "vec": "publicKey"
-                      }
-                  },
-                  {
-                      "name": "bump",
-                      "type": "u8"
-                  },
-                  {
-                      "name": "authBump",
-                      "type": "u8"
-                  }
-              ]
-          }
-      },
-      {
-          "name": "OrderRecord",
-          "type": {
-              "kind": "struct",
-              "fields": [
-                  {
-                      "name": "orderId",
-                      "type": {
-                          "array": [
-                              "u8",
-                              32
-                          ]
-                      }
-                  },
-                  {
-                      "name": "payer",
-                      "type": "publicKey"
-                  },
-                  {
-                      "name": "user",
-                      "type": "publicKey"
-                  },
-                  {
-                      "name": "fromChainId",
-                      "type": "u64"
-                  },
-                  {
-                      "name": "toChainId",
-                      "type": "u64"
-                  },
-                  {
-                      "name": "fromToken",
-                      "type": {
-                          "array": [
-                              "u8",
-                              32
-                          ]
-                      }
-                  },
-                  {
-                      "name": "toToken",
-                      "type": {
-                          "array": [
-                              "u8",
-                              32
-                          ]
-                      }
-                  },
-                  {
-                      "name": "from",
-                      "type": {
-                          "array": [
-                              "u8",
-                              32
-                          ]
-                      }
-                  },
-                  {
-                      "name": "receiver",
-                      "type": {
-                          "array": [
-                              "u8",
-                              33
-                          ]
-                      }
-                  },
-                  {
-                      "name": "tokenAmount",
-                      "type": "u128"
-                  },
-                  {
-                      "name": "swapTokenOut",
-                      "type": "publicKey"
-                  },
-                  {
-                      "name": "swapTokenOutBeforeBalance",
-                      "type": "u64"
-                  },
-                  {
-                      "name": "swapTokenOutMinAmountOut",
-                      "type": "u64"
-                  },
-                  {
-                      "name": "minAmountOut",
-                      "type": "u128"
-                  },
-                  {
-                      "name": "refererId",
-                      "type": {
-                          "option": {
-                              "vec": "u16"
-                          }
-                      }
-                  },
-                  {
-                      "name": "feeRatio",
-                      "type": {
-                          "option": {
-                              "vec": "u16"
-                          }
-                      }
-                  },
-                  {
-                      "name": "bump",
-                      "type": "u8"
-                  }
-              ]
-          }
-      }
-  ],
-  "types": [
-      {
-          "name": "DepositParams",
-          "type": {
-              "kind": "struct",
-              "fields": [
-                  {
-                      "name": "transferTokenAmount",
-                      "type": "u64"
-                  }
-              ]
-          }
-      },
-      {
-          "name": "InitConfigParams",
-          "type": {
-              "kind": "struct",
-              "fields": [
-                  {
-                      "name": "admin",
-                      "type": "publicKey"
-                  },
-                  {
-                      "name": "routers",
-                      "type": {
-                          "vec": "publicKey"
-                      }
-                  }
-              ]
-          }
-      },
-      {
-          "name": "TransferAdminParams",
-          "type": {
-              "kind": "struct",
-              "fields": [
-                  {
-                      "name": "admin",
-                      "type": "publicKey"
-                  }
-              ]
-          }
-      },
-      {
-          "name": "UpdateConfigParams",
-          "type": {
-              "kind": "struct",
-              "fields": [
-                  {
-                      "name": "routers",
-                      "type": {
-                          "vec": "publicKey"
-                      }
-                  }
-              ]
-          }
-      },
-      {
-          "name": "WithdrawParams",
-          "type": {
-              "kind": "struct",
-              "fields": [
-                  {
-                      "name": "transferTokenAmount",
-                      "type": "u64"
-                  }
-              ]
-          }
-      },
-      {
-          "name": "OrderRecordEvent",
-          "type": {
-              "kind": "struct",
-              "fields": [
-                  {
-                      "name": "orderId",
-                      "type": {
-                          "array": [
-                              "u8",
-                              32
-                          ]
-                      }
-                  },
-                  {
-                      "name": "payer",
-                      "type": "publicKey"
-                  },
-                  {
-                      "name": "fromChainId",
-                      "type": "u64"
-                  },
-                  {
-                      "name": "toChainId",
-                      "type": "u64"
-                  },
-                  {
-                      "name": "fromToken",
-                      "type": {
-                          "array": [
-                              "u8",
-                              32
-                          ]
-                      }
-                  },
-                  {
-                      "name": "toToken",
-                      "type": {
-                          "array": [
-                              "u8",
-                              32
-                          ]
-                      }
-                  },
-                  {
-                      "name": "from",
-                      "type": {
-                          "array": [
-                              "u8",
-                              32
-                          ]
-                      }
-                  },
-                  {
-                      "name": "receiver",
-                      "type": {
-                          "array": [
-                              "u8",
-                              33
-                          ]
-                      }
-                  },
-                  {
-                      "name": "tokenAmount",
-                      "type": "u128"
-                  },
-                  {
-                      "name": "swapTokenOut",
-                      "type": "publicKey"
-                  },
-                  {
-                      "name": "swapTokenOutBeforeBalance",
-                      "type": "u64"
-                  },
-                  {
-                      "name": "swapTokenOutMinAmountOut",
-                      "type": "u64"
-                  },
-                  {
-                      "name": "minAmountOut",
-                      "type": "u128"
-                  },
-                  {
-                      "name": "refererId",
-                      "type": {
-                          "option": {
-                              "vec": "u16"
-                          }
-                      }
-                  },
-                  {
-                      "name": "feeRatio",
-                      "type": {
-                          "option": {
-                              "vec": "u16"
-                          }
-                      }
-                  },
-                  {
-                      "name": "bump",
-                      "type": "u8"
-                  }
-              ]
-          }
-      },
-      {
-          "name": "OrderCrossInParams",
-          "type": {
-              "kind": "struct",
-              "fields": [
-                  {
-                      "name": "orderId",
-                      "type": {
-                          "array": [
-                              "u8",
-                              32
-                          ]
-                      }
-                  },
-                  {
-                      "name": "minAmountOut",
-                      "type": "u64"
-                  }
-              ]
-          }
-      },
-      {
-          "name": "OrderCrossOutParams",
-          "type": {
-              "kind": "struct",
-              "fields": [
-                  {
-                      "name": "orderId",
-                      "type": {
-                          "array": [
-                              "u8",
-                              32
-                          ]
-                      }
-                  },
-                  {
-                      "name": "tokenAmount",
-                      "type": "u64"
-                  },
-                  {
-                      "name": "minAmountOut",
-                      "type": "u128"
-                  },
-                  {
-                      "name": "toChainId",
-                      "type": "u64"
-                  },
-                  {
-                      "name": "fromToken",
-                      "type": {
-                          "array": [
-                              "u8",
-                              32
-                          ]
-                      }
-                  },
-                  {
-                      "name": "toToken",
-                      "type": {
-                          "array": [
-                              "u8",
-                              20
-                          ]
-                      }
-                  },
-                  {
-                      "name": "receiver",
-                      "type": {
-                          "array": [
-                              "u8",
-                              33
-                          ]
-                      }
-                  },
-                  {
-                      "name": "swapTokenOutMinAmountOut",
-                      "type": "u64"
-                  },
-                  {
-                      "name": "refererId",
-                      "type": {
-                          "option": {
-                              "vec": "u16"
-                          }
-                      }
-                  },
-                  {
-                      "name": "feeRatio",
-                      "type": {
-                          "option": {
-                              "vec": "u16"
-                          }
-                      }
-                  }
-              ]
-          }
-      },
-      {
-          "name": "OrderParams",
-          "type": {
-              "kind": "struct",
-              "fields": [
-                  {
-                      "name": "orderId",
-                      "type": {
-                          "array": [
-                              "u8",
-                              32
-                          ]
-                      }
-                  }
-              ]
-          }
-      },
-      {
-          "name": "CrossType",
-          "type": {
-              "kind": "enum",
-              "variants": [
-                  {
-                      "name": "CrossIn"
-                  },
-                  {
-                      "name": "CrossOut"
-                  }
-              ]
-          }
-      }
+    {
+      "name": "ChainpoolConfig",
+      "discriminator": [
+        192,
+        25,
+        50,
+        159,
+        245,
+        86,
+        93,
+        231
+      ]
+    },
+    {
+      "name": "OrderMarker",
+      "discriminator": [
+        221,
+        221,
+        169,
+        152,
+        245,
+        69,
+        110,
+        108
+      ]
+    },
+    {
+      "name": "ReleaseMarker",
+      "discriminator": [
+        6,
+        116,
+        96,
+        99,
+        17,
+        41,
+        48,
+        174
+      ]
+    }
   ],
   "events": [
-      {
-          "name": "CrossFinishEvent",
-          "fields": [
-              {
-                  "name": "crossType",
-                  "type": {
-                      "defined": "CrossType"
-                  },
-                  "index": false
-              },
-              {
-                  "name": "afterBalance",
-                  "type": "u64",
-                  "index": false
-              },
-              {
-                  "name": "amountOut",
-                  "type": "u64",
-                  "index": false
-              },
-              {
-                  "name": "orderRecord",
-                  "type": {
-                      "defined": "OrderRecordEvent"
-                  },
-                  "index": false
-              }
-          ]
-      },
-      {
-          "name": "CrossBeginEvent",
-          "fields": [
-              {
-                  "name": "crossType",
-                  "type": {
-                      "defined": "CrossType"
-                  },
-                  "index": false
-              },
-              {
-                  "name": "orderRecord",
-                  "type": {
-                      "defined": "OrderRecordEvent"
-                  },
-                  "index": false
-              }
-          ]
-      },
-      {
-          "name": "WithdrawEvent",
-          "fields": [
-              {
-                  "name": "authority",
-                  "type": "publicKey",
-                  "index": false
-              },
-              {
-                  "name": "tokenVault",
-                  "type": "publicKey",
-                  "index": false
-              },
-              {
-                  "name": "tokenAccount",
-                  "type": "publicKey",
-                  "index": false
-              },
-              {
-                  "name": "tokenMint",
-                  "type": "publicKey",
-                  "index": false
-              },
-              {
-                  "name": "tokenProgram",
-                  "type": "publicKey",
-                  "index": false
-              },
-              {
-                  "name": "tokenDecimal",
-                  "type": "u8",
-                  "index": false
-              },
-              {
-                  "name": "amount",
-                  "type": "u64",
-                  "index": false
-              }
-          ]
-      },
-      {
-          "name": "DepositEvent",
-          "fields": [
-              {
-                  "name": "owner",
-                  "type": "publicKey",
-                  "index": false
-              },
-              {
-                  "name": "authority",
-                  "type": "publicKey",
-                  "index": false
-              },
-              {
-                  "name": "tokenVault",
-                  "type": "publicKey",
-                  "index": false
-              },
-              {
-                  "name": "tokenAccount",
-                  "type": "publicKey",
-                  "index": false
-              },
-              {
-                  "name": "tokenMint",
-                  "type": "publicKey",
-                  "index": false
-              },
-              {
-                  "name": "tokenProgram",
-                  "type": "publicKey",
-                  "index": false
-              },
-              {
-                  "name": "tokenDecimal",
-                  "type": "u8",
-                  "index": false
-              },
-              {
-                  "name": "amount",
-                  "type": "u64",
-                  "index": false
-              }
-          ]
-      },
-      {
-          "name": "AdminChanged",
-          "fields": [
-              {
-                  "name": "newAdmin",
-                  "type": "publicKey",
-                  "index": false
-              },
-              {
-                  "name": "oldAdmin",
-                  "type": "publicKey",
-                  "index": false
-              }
-          ]
-      },
-      {
-          "name": "RouterChanged",
-          "fields": [
-              {
-                  "name": "newRouters",
-                  "type": {
-                      "vec": "publicKey"
-                  },
-                  "index": false
-              }
-          ]
-      }
+    {
+      "name": "ConfigChanged",
+      "discriminator": [
+        147,
+        25,
+        86,
+        98,
+        98,
+        77,
+        78,
+        192
+      ]
+    },
+    {
+      "name": "CrossOutEvent",
+      "discriminator": [
+        247,
+        103,
+        102,
+        176,
+        13,
+        54,
+        106,
+        23
+      ]
+    },
+    {
+      "name": "EmergencyWithdraw",
+      "discriminator": [
+        128,
+        80,
+        236,
+        119,
+        137,
+        129,
+        241,
+        144
+      ]
+    },
+    {
+      "name": "EpochRotated",
+      "discriminator": [
+        126,
+        64,
+        95,
+        10,
+        151,
+        233,
+        48,
+        238
+      ]
+    },
+    {
+      "name": "PauseChanged",
+      "discriminator": [
+        238,
+        188,
+        213,
+        78,
+        134,
+        209,
+        178,
+        218
+      ]
+    },
+    {
+      "name": "ReleaseEvent",
+      "discriminator": [
+        112,
+        22,
+        217,
+        145,
+        56,
+        223,
+        229,
+        6
+      ]
+    }
   ],
   "errors": [
-      {
-          "code": 6000,
-          "name": "Unauthorized",
-          "msg": "Unauthorized"
-      },
-      {
-          "code": 6001,
-          "name": "InsufficientFunds",
-          "msg": "User insufficient funds"
-      },
-      {
-          "code": 6002,
-          "name": "InvalidAccount",
-          "msg": "Invalid account"
-      },
-      {
-          "code": 6003,
-          "name": "TooLittleOutputReceived",
-          "msg": "Too little output received"
-      },
-      {
-          "code": 6004,
-          "name": "TooManyRouters",
-          "msg": "Too many routers"
-      },
-      {
-          "code": 6005,
-          "name": "InvalidRouter",
-          "msg": "Invalid router"
-      },
-      {
-          "code": 6006,
-          "name": "ReceiveTooLittle",
-          "msg": "Receive too little"
-      },
-      {
-          "code": 6007,
-          "name": "InvalidTokenAccount",
-          "msg": "Invalid token account"
-      },
-      {
-          "code": 6008,
-          "name": "InvalidTokenMint",
-          "msg": "Invalid token mint"
-      },
-      {
-          "code": 6009,
-          "name": "InvalidChainId",
-          "msg": "Invalid chain id"
-      },
-      {
-          "code": 6010,
-          "name": "OrderAlreadyExists",
-          "msg": "Order already exists"
-      },
-      {
-          "code": 6011,
-          "name": "OrderAlreadyProcessed",
-          "msg": "Order already processed"
-      },
-      {
-          "code": 6012,
-          "name": "InvalidRefererInfo",
-          "msg": "Invalid referer info"
-      }
+    {
+      "code": 6000,
+      "name": "InvalidChain",
+      "msg": "invalid chain"
+    },
+    {
+      "code": 6001,
+      "name": "UnsupportedChain",
+      "msg": "destination chain is not in the supported set"
+    },
+    {
+      "code": 6002,
+      "name": "ZeroAddress",
+      "msg": "address field must not be zero"
+    },
+    {
+      "code": 6003,
+      "name": "UnsupportedToken",
+      "msg": "unsupported token"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidReferrer",
+      "msg": "invalid referrer metadata"
+    },
+    {
+      "code": 6005,
+      "name": "TooManyReferrers",
+      "msg": "too many referrers"
+    },
+    {
+      "code": 6006,
+      "name": "ReferrerFeeTooHigh",
+      "msg": "referrer fee ratio sum exceeds cap"
+    },
+    {
+      "code": 6007,
+      "name": "MainAtaDrainForbidden",
+      "msg": "main ATA cannot be drained in amount None mode"
+    },
+    {
+      "code": 6008,
+      "name": "ZeroAmount",
+      "msg": "amount must be non-zero"
+    },
+    {
+      "code": 6009,
+      "name": "SlippageExceeded",
+      "msg": "slippage exceeded"
+    },
+    {
+      "code": 6010,
+      "name": "AmountOverflow",
+      "msg": "amount overflow"
+    },
+    {
+      "code": 6011,
+      "name": "FeeTokenForbidden",
+      "msg": "fee or hook token behavior is forbidden in v1"
+    },
+    {
+      "code": 6012,
+      "name": "TooManyValidators",
+      "msg": "too many validators"
+    },
+    {
+      "code": 6013,
+      "name": "TooManyChains",
+      "msg": "too many supported chains"
+    },
+    {
+      "code": 6014,
+      "name": "TooManyTokens",
+      "msg": "too many supported tokens"
+    },
+    {
+      "code": 6015,
+      "name": "AdminMustSign",
+      "msg": "admin must sign initialization"
+    },
+    {
+      "code": 6016,
+      "name": "AdminMustBePda",
+      "msg": "admin must be an off-curve governance PDA"
+    },
+    {
+      "code": 6017,
+      "name": "UnauthorizedAdmin",
+      "msg": "admin signer does not match config admin"
+    },
+    {
+      "code": 6018,
+      "name": "ChangeRequiresPaused",
+      "msg": "this config change requires cross-in releases to be paused"
+    },
+    {
+      "code": 6019,
+      "name": "CrossInPaused",
+      "msg": "cross-in releases are paused"
+    },
+    {
+      "code": 6020,
+      "name": "DuplicateValidator",
+      "msg": "duplicate validator"
+    },
+    {
+      "code": 6021,
+      "name": "NonCanonicalValidators",
+      "msg": "validators must be lexicographically sorted"
+    },
+    {
+      "code": 6022,
+      "name": "DuplicateTokenMapSource",
+      "msg": "duplicate token map source token"
+    },
+    {
+      "code": 6023,
+      "name": "TooManySwapPrograms",
+      "msg": "too many allowed swap programs"
+    },
+    {
+      "code": 6024,
+      "name": "TooManyExecutors",
+      "msg": "too many executors"
+    },
+    {
+      "code": 6025,
+      "name": "TooManyOperators",
+      "msg": "too many operators"
+    },
+    {
+      "code": 6026,
+      "name": "TooManyRefundAuthorities",
+      "msg": "too many refund authorities"
+    },
+    {
+      "code": 6027,
+      "name": "InvalidEpochVersion",
+      "msg": "epoch version does not match validators and threshold"
+    },
+    {
+      "code": 6028,
+      "name": "InvalidEmergencyTreasury",
+      "msg": "emergency treasury account is invalid"
+    },
+    {
+      "code": 6029,
+      "name": "InvalidAppId",
+      "msg": "proof targets an invalid application"
+    },
+    {
+      "code": 6030,
+      "name": "InvalidPayloadKind",
+      "msg": "payload kind is not supported by this instruction"
+    },
+    {
+      "code": 6031,
+      "name": "UnsupportedTokenMapping",
+      "msg": "token mapping is not supported"
+    },
+    {
+      "code": 6032,
+      "name": "NativeLamportsUnsupported",
+      "msg": "native lamports direct release is unsupported in v1"
+    },
+    {
+      "code": 6033,
+      "name": "InvalidRecipient",
+      "msg": "recipient does not match proof"
+    },
+    {
+      "code": 6034,
+      "name": "InvalidReceiverProgram",
+      "msg": "receiver program is invalid"
+    },
+    {
+      "code": 6035,
+      "name": "InvalidReceiverAuthority",
+      "msg": "receiver authority is invalid"
+    },
+    {
+      "code": 6036,
+      "name": "ReceiverAuthorityMustSign",
+      "msg": "receiver authority must sign"
+    },
+    {
+      "code": 6037,
+      "name": "InvalidBaseEscrow",
+      "msg": "base escrow is invalid"
+    }
   ],
-  "metadata": {
-      "address": "AxjZxsTdG5payyC5fwvnRXwD69xG35bdbRtTMLAefWbn"
-  }
+  "types": [
+    {
+      "name": "ChainpoolConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_authority_bump",
+            "type": "u8"
+          },
+          {
+            "name": "config_bump",
+            "type": "u8"
+          },
+          {
+            "name": "validators",
+            "type": {
+              "vec": {
+                "array": [
+                  "u8",
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "name": "threshold",
+            "type": "u8"
+          },
+          {
+            "name": "version",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "map_chain_id",
+            "type": "u64"
+          },
+          {
+            "name": "solana_chain_id",
+            "type": "u64"
+          },
+          {
+            "name": "mos_relay",
+            "type": {
+              "array": [
+                "u8",
+                20
+              ]
+            }
+          },
+          {
+            "name": "event_topic0",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "support_chain_ids",
+            "type": {
+              "vec": "u64"
+            }
+          },
+          {
+            "name": "supported_tokens",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "receiver_program",
+            "type": "pubkey"
+          },
+          {
+            "name": "paused",
+            "type": "bool"
+          },
+          {
+            "name": "operators",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "emergency_treasury",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CompactRelayProof",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "order_id",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "chain_and_gas_limit",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "message_payload",
+            "type": "bytes"
+          },
+          {
+            "name": "block_num",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "signatures",
+            "type": {
+              "vec": {
+                "array": [
+                  "u8",
+                  65
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConfigChanged",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "field",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "CrossOutArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "order_id",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "amount",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "to_chain_id",
+            "type": "u64"
+          },
+          {
+            "name": "to_token",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "receiver",
+            "type": {
+              "array": [
+                "u8",
+                33
+              ]
+            }
+          },
+          {
+            "name": "min_amount_out",
+            "type": "u128"
+          },
+          {
+            "name": "swap_token_out_min_amount_out",
+            "type": "u64"
+          },
+          {
+            "name": "source_token",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "source_amount",
+            "type": "u64"
+          },
+          {
+            "name": "referer_id",
+            "type": {
+              "vec": "u16"
+            }
+          },
+          {
+            "name": "fee_ratio",
+            "type": {
+              "vec": "u16"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "CrossOutEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "order_id",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "from_chain",
+            "type": "u64"
+          },
+          {
+            "name": "to_chain",
+            "type": "u64"
+          },
+          {
+            "name": "bridge_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "bridge_amount",
+            "type": "u64"
+          },
+          {
+            "name": "to_token",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "receiver",
+            "type": {
+              "array": [
+                "u8",
+                33
+              ]
+            }
+          },
+          {
+            "name": "min_amount_out",
+            "type": "u128"
+          },
+          {
+            "name": "source_token",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "source_amount",
+            "type": "u64"
+          },
+          {
+            "name": "referer_id",
+            "type": {
+              "vec": "u16"
+            }
+          },
+          {
+            "name": "fee_ratio",
+            "type": {
+              "vec": "u16"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "EmergencyWithdraw",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "destination",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EpochRotated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "threshold",
+            "type": "u8"
+          },
+          {
+            "name": "version",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "InitializeArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "validators",
+            "type": {
+              "vec": {
+                "array": [
+                  "u8",
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "name": "threshold",
+            "type": "u8"
+          },
+          {
+            "name": "version",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "map_chain_id",
+            "type": "u64"
+          },
+          {
+            "name": "solana_chain_id",
+            "type": "u64"
+          },
+          {
+            "name": "mos_relay",
+            "type": {
+              "array": [
+                "u8",
+                20
+              ]
+            }
+          },
+          {
+            "name": "event_topic0",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "support_chain_ids",
+            "type": {
+              "vec": "u64"
+            }
+          },
+          {
+            "name": "supported_tokens",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "operators",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "emergency_treasury",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OrderMarker",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PauseChanged",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "paused",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ReleaseEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "order_id",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "bridge_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "bridge_amount",
+            "type": "u64"
+          },
+          {
+            "name": "base_escrow",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ReleaseInfo",
+      "docs": [
+        "R6: authoritative facts returned by `chainpool.release_to_receiver` so the receiver",
+        "does not re-parse the proof. This is a cross-program borsh ABI contract — its layout",
+        "lives here (compile-time single source of truth) and any change requires both programs",
+        "to be upgraded together (borsh rejects trailing/short bytes; no version negotiation).",
+        "Fields carried as CPI accounts (bridge_mint, base_escrow) are validated by chainpool's",
+        "own account constraints and are intentionally absent here; only data-only facts appear.",
+        "2a: user = top-level to_address; dest_token = bridge_mint; min_amount_out = 0",
+        "2b: user = inner.to_address; dest_token = inner.to_token; min_amount_out = inner.min"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "dest_token",
+            "type": "pubkey"
+          },
+          {
+            "name": "min_amount_out",
+            "type": "u64"
+          },
+          {
+            "name": "bridge_amount",
+            "type": "u64"
+          },
+          {
+            "name": "from_chain",
+            "type": "u64"
+          },
+          {
+            "name": "is_direct",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ReleaseMarker",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
 }

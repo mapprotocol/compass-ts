@@ -4,7 +4,9 @@
   "description": "compass-ts version",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && node ./app/index.js -c ./config.json",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "start": "node ./app/index.js",
     "run": "node ./app/index.js",
     "eslint": "eslint . --ext ts --fix"
   },
