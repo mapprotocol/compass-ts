@@ -1,5 +1,5 @@
 {
-  "address": "2Aw4bYHAkVftJZEcNaP5Pdq62zXwrxEFGbjLZs17iR4J",
+  "address": "rcvr2wL88Bg3eBGH4Hr7VjugbDLm5YafBraggmmuRGJ",
   "metadata": {
     "name": "receiver",
     "version": "0.1.0",
@@ -231,7 +231,7 @@
         },
         {
           "name": "chainpool_program",
-          "address": "9D1Try9tMtGkEoWoGadE3VgcE7T4hqfDNP2B5xJhz8FC"
+          "address": "mosv35NjuYkM8iMdihM96cG2ZziU2RJYZfSaGuV8uF6"
         },
         {
           "name": "token_program",
@@ -632,7 +632,7 @@
         },
         {
           "name": "chainpool_program",
-          "address": "9D1Try9tMtGkEoWoGadE3VgcE7T4hqfDNP2B5xJhz8FC"
+          "address": "mosv35NjuYkM8iMdihM96cG2ZziU2RJYZfSaGuV8uF6"
         },
         {
           "name": "token_program",
@@ -1948,7 +1948,15 @@
             "type": "pubkey"
           },
           {
+            "name": "from_chain",
+            "type": "u64"
+          },
+          {
             "name": "bridge_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "dest_token",
             "type": "pubkey"
           },
           {

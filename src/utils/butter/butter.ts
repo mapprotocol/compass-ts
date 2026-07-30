@@ -50,6 +50,9 @@ export async function requestBridgeData(domain: string, txHash: string, apiKey: 
         receiver: request.receiver,
         entranceId: request.entranceId,
     });
+    if (request.entrance) {
+        params.append('entrance', request.entrance);
+    }
     (request.affiliate || []).forEach((affiliate) => {
         params.append('affiliate', affiliate);
     });

@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import { Chain } from '../../config/config'
 import { Log } from '../../storages/model'
 import { insertMos } from '../../storages/mysql/mysql'
+import { alarm } from '../../utils/alarm/slack'
 import {
   requestBridgeData
 } from "../../utils/butter/butter";
@@ -14,11 +15,12 @@ import {
   parseMintAccount,
 } from "./utils";
 
-const SUPPORTED_CROSS_OUT_BRIDGE_MINTS = new Set([
+const DEFAULT_SUPPORTED_CROSS_OUT_BRIDGE_MINTS = [
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
   "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
   "So11111111111111111111111111111111111111112",
-]);
+];
+const DEFAULT_NATIVE_TOKEN_OUT_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 export class SolEventHandler {
   constructor(
@@ -35,9 +37,11 @@ export class SolEventHandler {
     console.log("Find CrossOut emit_cpi tx", txHash, "slot", trx?.slot, "blockTime", trx?.blockTime)
     const orderId = Buffer.from(Uint8Array.from(event.data.order_id)).toString("hex");
     const bridgeMint = event.data.bridge_mint as PublicKey
-    if (!SUPPORTED_CROSS_OUT_BRIDGE_MINTS.has(bridgeMint.toBase58())) {
-      console.log("Ignore CrossOut tx", txHash, "unsupported bridgeMint", bridgeMint.toBase58())
-      return
+    if (!this.getSupportedBridgeMints().has(bridgeMint.toBase58())) {
+      const message = `Solana unsupported CrossOut bridgeMint ${bridgeMint.toBase58()} txHash ${txHash}`
+      console.log(message)
+      await alarm(message)
+      throw new Error(message)
     }
     console.log("event.name ------------------- ", event.name)
     console.log("orderId ------------------ ", orderId)
@@ -52,7 +56,7 @@ export class SolEventHandler {
           receiver[${event.data.receiver}],
           minAmountOut[${event.data.min_amount_out}],
           fromToken[${event.data.source_token}],
-          amountOut[${event.data.source_amount}],
+          sourceAmount[${event.data.source_amount}],
           refererId[${event.data.referer_id}],
           feeRatio[${event.data.fee_ratio}],`
     );
@@ -66,13 +70,14 @@ export class SolEventHandler {
     data.set("toChain", normalizeEventNumberHex(event.data.to_chain))
     data.set("bridgeMint", normalizeEventValue(event.data.bridge_mint))
     data.set("bridgeAmount", normalizeEventValue(event.data.bridge_amount))
-    data.set("tokenAmount", normalizeEventNumberHex(event.data.source_amount))
+    data.set("tokenAmount", normalizeEventNumberHex(event.data.bridge_amount))
     data.set("toToken", normalizeEventValue(event.data.to_token))
     data.set("receiver", normalizeEventValue(event.data.receiver))
     data.set("minAmountOut", normalizeEventNumberHex(event.data.min_amount_out))
     data.set("swapTokenOutMinAmountOut", normalizeEventNumberHex(event.data.min_amount_out))
     data.set("fromToken", normalizeEventValue(event.data.source_token))
-    data.set("amountOut", normalizeEventNumberHex(event.data.source_amount))
+    data.set("sourceAmount", normalizeEventNumberHex(event.data.source_amount))
+    data.set("amountOut", normalizeEventNumberHex(event.data.bridge_amount))
     data.set("refererId", normalizeEventValue(event.data.referer_id))
     data.set("feeRatio", normalizeEventValue(event.data.fee_ratio))
     data.set("originReceiver", normalizeEventValue(event.data.receiver))
@@ -81,7 +86,7 @@ export class SolEventHandler {
 
     const toTokenBytes = new Uint8Array(32);
     toTokenBytes.set(event.data.to_token, 0)
-    let toToken = ethers.getAddress(ethers.hexlify(toTokenBytes.slice(12)));
+    let toToken = this.resolveTokenOutAddress(toTokenBytes);
     if (toToken == "0x0000000000000000000000000000000000425443") {
       toToken = "0x425443"
     }
@@ -154,6 +159,20 @@ export class SolEventHandler {
       }
       console.log("CrossOut Insert Success, txHash:", txHash, "id:", id);
     })
+  }
+
+  private getSupportedBridgeMints(): Set<string> {
+    const configuredMints = this.cfg.opts.supportedBridgeMints || []
+    return new Set(configuredMints.length > 0 ? configuredMints : DEFAULT_SUPPORTED_CROSS_OUT_BRIDGE_MINTS)
+  }
+
+  private resolveTokenOutAddress(toTokenBytes: Uint8Array): string {
+    if (isZeroBytes(toTokenBytes)) {
+      const nativeTokenOutAddress = this.cfg.opts.nativeTokenOutAddress || DEFAULT_NATIVE_TOKEN_OUT_ADDRESS
+      return ethers.getAddress(nativeTokenOutAddress)
+    }
+
+    return ethers.getAddress(ethers.hexlify(toTokenBytes.slice(12)));
   }
 
   async crossIn(event: Event, txHash: string, contractAddress: string, trx: VersionedTransactionResponse | null) {
@@ -285,6 +304,10 @@ function publicKeyToBytes(value: PublicKey | undefined): number[] {
     return zeroBytes(32);
   }
   return Array.from(value.toBytes());
+}
+
+function isZeroBytes(value: Uint8Array): boolean {
+  return value.every((byte) => byte === 0);
 }
 
 function zeroBytes(length: number): number[] {

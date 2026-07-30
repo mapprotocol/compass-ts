@@ -19,6 +19,8 @@ export interface ChainOpt {
     mcs: string | string[];
     blockConfirmations: string;
     butterEntrance: string;
+    supportedBridgeMints?: string[];
+    nativeTokenOutAddress?: string;
 }
 
 

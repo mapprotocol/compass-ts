@@ -4,17 +4,26 @@ import { bs58 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 import { PublicKey, VersionedTransactionResponse } from "@solana/web3.js";
 
 export interface ParsedSolEvents {
-  chainPoolEvents: Event[];
-  receiverEvents: Event[];
+  chainPoolEvents: ParsedSolEvent[];
+  receiverEvents: ParsedSolEvent[];
+}
+
+export interface ParsedSolEvent {
+  event: Event;
+  programId: string;
 }
 
 export interface SolEventParserOptions {
   eventProgramIds?: string[];
+  chainPoolProgramId?: string;
+  receiverProgramId?: string;
 }
 
 const ANCHOR_EVENT_CPI_PREFIX = Buffer.from([0xe4, 0x45, 0xa5, 0x2e, 0x51, 0xcb, 0x9a, 0x1d]);
 const CHAIN_POOL_EVENT_NAMES = new Set(["CrossOutEvent"]);
 const RECEIVER_CROSS_IN_EVENT_NAMES = new Set(["CrossInEvent", "RefundEvent"]);
+const DEFAULT_CHAIN_POOL_PROGRAM_ID = "mosv35NjuYkM8iMdihM96cG2ZziU2RJYZfSaGuV8uF6";
+const DEFAULT_RECEIVER_PROGRAM_ID = "rcvr2wL88Bg3eBGH4Hr7VjugbDLm5YafBraggmmuRGJ";
 
 export class SolEventParser {
   readonly chainPoolProgramId: PublicKey;
@@ -28,8 +37,8 @@ export class SolEventParser {
     const chainPoolIdl = require("../../../src/chain/sol/chainpool.json");
     const receiverIdl = require("../../../src/chain/sol/receiver.json");
 
-    this.chainPoolProgramId = new PublicKey(getIdlAddress(chainPoolIdl));
-    this.receiverProgramId = new PublicKey(getIdlAddress(receiverIdl));
+    this.chainPoolProgramId = new PublicKey(options.chainPoolProgramId || DEFAULT_CHAIN_POOL_PROGRAM_ID);
+    this.receiverProgramId = new PublicKey(options.receiverProgramId || DEFAULT_RECEIVER_PROGRAM_ID);
     this.chainPoolCoder = new BorshEventCoder(toEventOnlyIdl(chainPoolIdl));
     this.receiverCoder = new BorshEventCoder(toEventOnlyIdl(receiverIdl));
     this.eventProgramIds = Array.from(new Set(options.eventProgramIds || []))
@@ -65,7 +74,7 @@ export class SolEventParser {
         if (programId.equals(this.chainPoolProgramId)) {
           const event = this.decodeEventCpi(instruction.data, this.chainPoolCoder);
           if (event && CHAIN_POOL_EVENT_NAMES.has(event.name)) {
-            ret.chainPoolEvents.push(event);
+            ret.chainPoolEvents.push(toParsedEvent(event, programId));
           }
           continue;
         }
@@ -73,7 +82,7 @@ export class SolEventParser {
         if (programId.equals(this.receiverProgramId)) {
           const event = this.decodeEventCpi(instruction.data, this.receiverCoder);
           if (event && RECEIVER_CROSS_IN_EVENT_NAMES.has(event.name)) {
-            ret.receiverEvents.push(event);
+            ret.receiverEvents.push(toParsedEvent(event, programId));
           }
           continue;
         }
@@ -81,13 +90,13 @@ export class SolEventParser {
         if (this.isEventProgramAlias(programId)) {
           const chainPoolEvent = this.decodeEventCpi(instruction.data, this.chainPoolCoder);
           if (chainPoolEvent && CHAIN_POOL_EVENT_NAMES.has(chainPoolEvent.name)) {
-            ret.chainPoolEvents.push(chainPoolEvent);
+            ret.chainPoolEvents.push(toParsedEvent(chainPoolEvent, programId));
             continue;
           }
 
           const receiverEvent = this.decodeEventCpi(instruction.data, this.receiverCoder);
           if (receiverEvent && RECEIVER_CROSS_IN_EVENT_NAMES.has(receiverEvent.name)) {
-            ret.receiverEvents.push(receiverEvent);
+            ret.receiverEvents.push(toParsedEvent(receiverEvent, programId));
           }
         }
       }
@@ -124,12 +133,11 @@ export class SolEventParser {
   }
 }
 
-function getIdlAddress(idl: any): string {
-  const address = idl.address || idl.metadata?.address;
-  if (!address) {
-    throw new Error(`Program address not found in ${idl.metadata?.name || "IDL"}`);
-  }
-  return address;
+function toParsedEvent(event: Event, programId: PublicKey): ParsedSolEvent {
+  return {
+    event,
+    programId: programId.toBase58(),
+  };
 }
 
 function normalizeEventDataAliases(event: Event): Event {
